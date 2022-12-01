@@ -1,0 +1,19 @@
+# Docker Compose version
+version: '3'
+
+# Service definition
+services:
+  # [BACKEND] Spring Boot Application 
+  mission:
+    image: 'mission:latest'
+    build:
+      # Dockerfile path
+      context: .
+    container_name: mission
+    # Environment variables in application.properties
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://slosada:eccocarMission@eccocarmissioncluster.m9j0mdk.mongodb.net/?retryWrites=true&w=majority
+      - SPRING_DATA_MONGODB_DATABASE=test
+    ports:
+      # Expose port 8080 of the container and forward it to port 8080 of the host machine
+      - 8080:8080
