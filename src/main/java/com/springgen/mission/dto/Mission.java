@@ -1,6 +1,5 @@
 package com.springgen.mission.dto;
 
-import com.mongodb.lang.NonNull;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
@@ -8,35 +7,31 @@ import java.lang.String;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.UUID;
 
-@Document(
-    collection = "mission"
-)
 public class Mission {
-  @NonNull
-  @Id
-  private Integer id;
 
+  private UUID uuid;
+  
   private String name;
 
   private Date missionStartDate;
 
-  private String starship;
+  private Date missionEndDate;
 
-  private ArrayList<Object> people;
+  private Starship starship;
+
+  private ArrayList<People> people;
 
   private Integer crew;
 
-  private ArrayList<Object> planets;
+  private ArrayList<Planets> planets;
 
   public Mission() {
   }
 
-  public Mission(Integer id, String name, Date missionStartDate, String starship,
-      ArrayList<Object> people, Integer crew, ArrayList<Object> planets) {
-    this.id = id;
+  public Mission(String name, Date missionStartDate, Starship starship,
+      ArrayList<People> people, Integer crew, ArrayList<Planets> planets) {
     this.name = name;
     this.missionStartDate = missionStartDate;
     this.starship = starship;
@@ -45,14 +40,14 @@ public class Mission {
     this.planets = planets;
   }
 
-  public Integer getId() {
-    return this.id;
+  public UUID getUuid() {
+    return this.uuid;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
   }
-
+  
   public String getName() {
     return this.name;
   }
@@ -61,27 +56,35 @@ public class Mission {
     this.name = name;
   }
 
-  public Date getMissionstartdate() {
+  public Date getMissionStartDate() {
     return this.missionStartDate;
   }
 
-  public void setMissionstartdate(Date missionStartDate) {
+  public void setMissionStartDate(Date missionStartDate) {
     this.missionStartDate = missionStartDate;
   }
 
-  public String getStarship() {
+  public Date getMissionEndDate() {
+    return this.missionEndDate;
+  }
+
+  public void setMissionEndDate(Date missionEndDate) {
+    this.missionEndDate = missionEndDate;
+  }
+
+  public Starship getStarship() {
     return this.starship;
   }
 
-  public void setStarship(String starship) {
+  public void setStarship(Starship starship) {
     this.starship = starship;
   }
 
-  public ArrayList<Object> getPeople() {
+  public ArrayList<People> getPeople() {
     return this.people;
   }
 
-  public void setPeople(ArrayList<Object> people) {
+  public void setPeople(ArrayList<People> people) {
     this.people = people;
   }
 
@@ -93,11 +96,11 @@ public class Mission {
     this.crew = crew;
   }
 
-  public ArrayList<Object> getPlanets() {
+  public ArrayList<Planets> getPlanets() {
     return this.planets;
   }
 
-  public void setPlanets(ArrayList<Object> planets) {
+  public void setPlanets(ArrayList<Planets> planets) {
     this.planets = planets;
   }
 
@@ -107,9 +110,8 @@ public class Mission {
   @Override
   public String toString() {
     return "{" +
-      " id='" + getId() + "'" +
       " name='" + getName() + "'" +
-      " missionStartDate='" + getMissionstartdate() + "'" +
+      " missionStartDate='" + getMissionStartDate() + "'" +
       " starship='" + getStarship() + "'" +
       " people='" + getPeople() + "'" +
       " crew='" + getCrew() + "'" +
@@ -122,7 +124,7 @@ public class Mission {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, missionStartDate, starship, people, crew, planets);
+    return Objects.hash(name, missionStartDate, starship, people, crew, planets);
   }
 
   /**
@@ -137,6 +139,13 @@ public class Mission {
       return false;
     }
     Mission mission = (Mission) o;
-    return Objects.equals(id, mission.id) && Objects.equals(name, mission.name) && Objects.equals(missionStartDate, mission.missionStartDate) && Objects.equals(starship, mission.starship) && Objects.equals(people, mission.people) && Objects.equals(crew, mission.crew) && Objects.equals(planets, mission.planets);
+    return Objects.equals(name, mission.name) 
+        && Objects.equals(missionStartDate, mission.missionStartDate) 
+        && Objects.equals(starship, mission.starship) 
+        && Objects.equals(people, mission.people) 
+        && Objects.equals(crew, mission.crew) 
+        && Objects.equals(planets, mission.planets);
   }
+
+
 }
