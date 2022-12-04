@@ -19,7 +19,7 @@ public class SwaggerConfig {
     // http://localhost:8080/swagger-ui.html
     return new Docket(DocumentationType.SWAGGER_2)
         .select()
-        .apis(RequestHandlerSelectors.basePackage("com.springgen.mission.controller"))
+        .apis(RequestHandlerSelectors.basePackage("com.eccocar.mission.controller"))
         .paths(PathSelectors.any())
         .build()
         .apiInfo(getApiInfo());
