@@ -1,4 +1,4 @@
-package com.springgen.mission;
+package com.eccocar.mission;
 
 import java.lang.String;
 import org.springframework.boot.SpringApplication;

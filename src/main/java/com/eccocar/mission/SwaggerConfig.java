@@ -1,4 +1,4 @@
-package com.springgen.mission;
+package com.eccocar.mission;
 
 import java.util.Collections;
 import org.springframework.context.annotation.Bean;
@@ -26,13 +26,13 @@ public class SwaggerConfig {
   }
 
   private ApiInfo getApiInfo() {
-    return new ApiInfo("mission", 
+    return new ApiInfo("Mission", 
         "REST API Description", 
         "1.0", 
         "",
-        new Contact("", "", ""), 
+        new Contact("Sergio Losada", "https://github.com/sergio-losada/eccocar-mission", "sergio.losada@outlook.com"), 
         "LICENSE", 
-        "LICENSE URL", 
+        "https://drive.google.com/file/d/1_s8gJFiE_i9jby_hGbcbFaO2iupr_Jsd/view?usp=sharing", 
         Collections.emptyList());
   }
 }
