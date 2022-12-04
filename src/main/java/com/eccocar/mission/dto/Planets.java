@@ -1,40 +1,41 @@
-package com.springgen.mission.dto;
+package com.eccocar.mission.dto;
 
+import com.eccocar.mission.dto.Views.ParsedMission;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.mongodb.lang.NonNull;
 import java.lang.Double;
-import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Objects;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(
-    collection = "planets"
-)
 public class Planets {
-  @NonNull
-  private Integer id;
 
+  @NonNull
+  @JsonView(ParsedMission.class)
+  private String url;
+
+  @JsonView(ParsedMission.class)
   private String name;
 
+  @JsonView(ParsedMission.class)
   private Double diameter;
 
   public Planets() {
   }
 
-  public Planets(Integer id, String name, Double diameter) {
-    this.id = id;
+  public Planets(String url, String name, Double diameter) {
+    this.url = url;
     this.name = name;
     this.diameter = diameter;
   }
 
-  public Integer getId() {
-    return this.id;
+  public String getUrl() {
+    return this.url;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setUrl(String url) {
+    this.url = url;
   }
 
   public String getName() {
@@ -59,7 +60,7 @@ public class Planets {
   @Override
   public String toString() {
     return "{" +
-      " id='" + getId() + "'" +
+      " url='" + getUrl() + "'" +
       " name='" + getName() + "'" +
       " diameter='" + getDiameter() + "'" +
     "}";
@@ -70,7 +71,7 @@ public class Planets {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, diameter);
+    return Objects.hash(url, name, diameter);
   }
 
   /**
@@ -85,6 +86,8 @@ public class Planets {
       return false;
     }
     Planets planets = (Planets) o;
-    return Objects.equals(id, planets.id) && Objects.equals(name, planets.name) && Objects.equals(diameter, planets.diameter);
+    return Objects.equals(url, planets.url) 
+        && Objects.equals(name, planets.name) 
+        && Objects.equals(diameter, planets.diameter);
   }
 }

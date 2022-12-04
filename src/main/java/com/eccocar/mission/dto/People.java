@@ -1,36 +1,36 @@
-package com.springgen.mission.dto;
+package com.eccocar.mission.dto;
 
+import com.eccocar.mission.dto.Views.ParsedMission;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.mongodb.lang.NonNull;
-import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Objects;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(
-    collection = "people"
-)
 public class People {
-  @NonNull
-  private Integer id;
 
+  @NonNull
+  @JsonView(ParsedMission.class)
+  private String url;
+
+  @JsonView(ParsedMission.class)
   private String name;
 
   public People() {
   }
 
-  public People(Integer id, String name) {
-    this.id = id;
+  public People(String url, String name) {
+    this.url = url;
     this.name = name;
   }
 
-  public Integer getId() {
-    return this.id;
+  public String getUrl() {
+    return this.url;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setUrl(String id) {
+    this.url = id;
   }
 
   public String getName() {
@@ -47,7 +47,7 @@ public class People {
   @Override
   public String toString() {
     return "{" +
-      " id='" + getId() + "'" +
+      " url='" + getUrl() + "'" +
       " name='" + getName() + "'" +
     "}";
   }
@@ -57,7 +57,7 @@ public class People {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(id, name);
+    return Objects.hash(url, name);
   }
 
   /**
@@ -72,6 +72,7 @@ public class People {
       return false;
     }
     People people = (People) o;
-    return Objects.equals(id, people.id) && Objects.equals(name, people.name);
+    return Objects.equals(url, people.url) 
+        && Objects.equals(name, people.name);
   }
 }
