@@ -2,7 +2,7 @@
 [https://mission-sergio-losada.cloud.okteto.net/swagger-ui.html]
 ## API REST para la gestión de misiones espaciales:
 
-### campos:
+### Campos:
  - uuid: identificador único de la misión
  - name: nombre de la misión
  - missionStartDate: fecha de inicio de la misión
@@ -56,7 +56,7 @@ Siguiendo las buenas prácticas de este framework de Java, el proyecto de Spring
 - Servicio: implementa la lógica de negocio y ejecuta las reglas de validación propias de la aplicación
 - Repositorio: efectúa la conexión con la base de datos
 
-![Patrón de diseño de capas](https://drive.google.com/file/d/1oOjeJFVAv1CtqBn1PnrB6wJ1Z8A61TKQ/view?usp=sharing)
+![Patrón de diseño de capas](https://raw.githubusercontent.com/sergio-losada/sergio-losada.github.io/2e0629da436579fef3729b282e62c62386a87d06/capas.PNG)
 
 ### Funcionamiento
 La fuente de datos de esta API es la API de Star Wars [https://swapi.dev/documentation]. En la operación POST de inserción en base de datos, el servidor demanda las URL de los recursos (starships, people, planets) que queramos asociar a nuestra Misión. La operación GET se encarga de realizar las llamadas correpsondiente a SWAPI para devolver en el cuerpo de la respuesta los datos actualizados y con el formato especificado en el apartado 2.1 del enunciado.
@@ -117,11 +117,16 @@ Y el cuerpo de la respuesta devuelto sería el siguiente:
 }
 ```
 
-### Detalles
-Para el endpoint que realiza una recomendación de misiones, se han incorporado dos posibles criterios:
-- GET /mission/recommend?criteria=reward: mayor recompensa
-- GET /mission/recommend?criteria=ratio: mayor ratio recompensa/horas
-Al inicio de la llamada, la cola estará llena con todas las misiones existentes. Cuando una de estas dos llamadas devuelve en orden todas las misiones, llamadas sucesivas devolverán un cuerpo de respuesta vacío. Para reencolar todas las misiones, es necesario realizar una petición a cualquier otra llamada que no sea el endpoint de recomendación (p.e., una llamada GET /mision).
+### Detalles de implementación
+- Para el endpoint que realiza una recomendación de misiones, se han incorporado dos posibles criterios:
+  - GET /mission/recommend?criteria=reward: mayor recompensa
+  - GET /mission/recommend?criteria=ratio: mayor ratio recompensa/horas
+  Al inicio de la llamada, la cola estará llena con todas las misiones existentes. Cuando una de estas dos llamadas devuelve en orden todas las misiones, llamadas sucesivas devolverán un cuerpo de respuesta vacío. Para reencolar todas las misiones, es necesario realizar una petición a cualquier otra llamada que no sea el endpoint de recomendación (p.e., una llamada GET /mision).
+- Las misiones tienen un UUID autogenerado, y su nombre ha de ser único, causando conflicto en caso contrario.
+- Starships, People y Planets no tienen id en la especificación de SWAPI. Se adjunta su URL para identificarlos.
+- La operación DELETE se ha implementado para borrar los objetos insertados en los tests del controlador.
+- En la operación GET, en el cuerpo de la Misión se incluyen campos extra, como reward o ratio, que el enunciado no indica que deban incluirse pero que facilita la comprensión. Estos campos pueden ser fácilmente excluidos gracias a la etiqueta @JsonView.
+-  
 
 ### Pruebas
 El proyecto Spring Boot adjunta pruebas unitarias tanto de controlador (librería WebTestClient que simula un cliente HTTP) como de servicio (librería mockito para crear un entorno mockeado), así como unas pruebas de integración que simulan el despliegue en un contenedor Docker con una imagen de MongoDB. En el repositorio se incluye también el fichero mission.postman_collection.json, una colección de peticiones de prueba para Postman.
