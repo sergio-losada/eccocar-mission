@@ -26,8 +26,8 @@ public class SwaggerConfig {
   }
 
   private ApiInfo getApiInfo() {
-    return new ApiInfo("Mission", 
-        "REST API Description", 
+    return new ApiInfo("Mission REST API", 
+        "REST API for managing space missions", 
         "1.0", 
         "",
         new Contact("Sergio Losada", "https://github.com/sergio-losada/eccocar-mission", "sergio.losada@outlook.com"), 
