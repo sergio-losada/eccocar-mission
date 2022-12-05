@@ -160,54 +160,59 @@ public class MissionService {
    * @return whether the given object is a valid Mission or not
    */
   public boolean isMissionValid(MissionDAO missionDAO) {
-    Mission mission = this.missionMapper.getMission(missionDAO);
-    // At least a starship (missionStartDate is assigned automatically if not present)
-    if(mission.getStarship() == null) {
-      return false;
-    }
-    // At least one or more captains and planets
-    if(mission.getPeople() == null || mission.getPlanets() == null) {
-      return false;  
-    }
-    if(mission.getPeople().isEmpty() || mission.getPlanets().isEmpty()) {
-      return false;
-    }
-    // At least 0 or more crew members
-    if(mission.getCrew() < 0) {
-      return false;
-    }
-    // If a starship has had pilots, at least one of them must be in the mission
-    RestTemplate restTemplate = new RestTemplate();
-    var starship = restTemplate.getForEntity("https://swapi.dev/api/starships?name=" + mission.getStarship().getName(), Starship.class);
-    // People that this starship has been piloted by
-    var pilots = starship.getBody().getPilots();
-    boolean isOnePilotPresent = false;
-    if(pilots != null && !pilots.isEmpty()) {
-      for(String pilot: pilots) {
-        if(missionDAO.getPeople().contains(pilot)) {
-          isOnePilotPresent = true;
+    try {
+      Mission mission = this.missionMapper.getMission(missionDAO);
+      // At least a starship (missionStartDate is assigned automatically if not present)
+      if(mission.getStarship() == null) {
+        return false;
+      }
+      // At least one or more captains and planets
+      if(mission.getPeople() == null || mission.getPlanets() == null) {
+        return false;  
+      }
+      if(mission.getPeople().isEmpty() || mission.getPlanets().isEmpty()) {
+        return false;
+      }
+      // At least 0 or more crew members
+      if(mission.getCrew() < 0) {
+        return false;
+      }
+      // If a starship has had pilots, at least one of them must be in the mission
+      RestTemplate restTemplate = new RestTemplate();
+      var starship = restTemplate.getForEntity("https://swapi.dev/api/starships?name=" + mission.getStarship().getName(), Starship.class);
+      // People that this starship has been piloted by
+      var pilots = starship.getBody().getPilots();
+      boolean isOnePilotPresent = false;
+      if(pilots != null && !pilots.isEmpty()) {
+        for(String pilot: pilots) {
+          if(missionDAO.getPeople().contains(pilot)) {
+            isOnePilotPresent = true;
+          }
+        }
+        if(!isOnePilotPresent) {
+          return false;
         }
       }
-      if(!isOnePilotPresent) {
+      // The number of captains and crew must be bigger than the crew required by the starship
+      int crew = Integer.parseInt(mission.getStarship().getCrew().replace(",", ""));
+      int pass = Integer.parseInt(mission.getStarship().getPassengers().replace(",", ""));
+      if((mission.getPeople().size() + mission.getCrew()) < crew) {
         return false;
       }
-    }
-    // The number of captains and crew must be bigger than the crew required by the starship
-    int crew = Integer.parseInt(mission.getStarship().getCrew().replace(",", ""));
-    int pass = Integer.parseInt(mission.getStarship().getPassengers().replace(",", ""));
-    if((mission.getPeople().size() + mission.getCrew()) < crew) {
-      return false;
-    }
-    // The number of captains and crew must be smaller than the crew and passengers of the starship
-    if((mission.getPeople().size() + mission.getCrew()) > (crew + pass)) {
-      return false;
-    }
-    // A captain cannot be assigned to more than one mission at the same time
-    ArrayList<People> people = this.getMissions().stream().map(missions -> missions.getPeople()).collect(Collectors.toList()).get(0);
-    for(People captain: mission.getPeople()) {
-      if(people.contains(captain)) {
+      // The number of captains and crew must be smaller than the crew and passengers of the starship
+      if((mission.getPeople().size() + mission.getCrew()) > (crew + pass)) {
         return false;
       }
+      // A captain cannot be assigned to more than one mission at the same time
+      ArrayList<People> people = this.getMissions().stream().map(missions -> missions.getPeople()).collect(Collectors.toList()).get(0);
+      for(People captain: mission.getPeople()) {
+        if(people.contains(captain)) {
+          return false;
+        }
+      }
+    }
+    catch(Exception e) {
+      return false;
     }
     return true;
   }
