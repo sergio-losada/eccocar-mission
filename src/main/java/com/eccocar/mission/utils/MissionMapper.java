@@ -18,8 +18,8 @@ public class MissionMapper {
 
     /**
      * Casts a list of MissionDAO entities to Mission objects 
-     * @param missionArray
-     * @return
+     * @param missionArray the array ot MissionDAO entities
+     * @return array containing all the Mission objects after being casted
      */
     public ArrayList<Mission> getAllMissionDTO(List<MissionDAO> missionArray) {
         ArrayList<Mission> missions = new ArrayList<>();
@@ -31,8 +31,8 @@ public class MissionMapper {
 
     /**
      * Casts a missionDAO entity to a Mission object
-     * @param missionDAO
-     * @return
+     * @param missionDAO the MissionDAO entity to be casted
+     * @return the Mission object after being casted
      */
     public Mission getMission(MissionDAO missionDAO) {
         Mission mission = new Mission();
