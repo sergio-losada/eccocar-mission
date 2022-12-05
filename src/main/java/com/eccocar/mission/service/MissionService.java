@@ -114,7 +114,7 @@ public class MissionService {
    * or not, in order to keep polling from the queue or requeue the existing missions
    * @return
    */
-  public Mission pollMisionQueue(String criteria, boolean isRecommendModeEnabled) {
+  public Mission pollMissionQueue(String criteria, boolean isRecommendModeEnabled) {
     // Recommendation criteria: REWARD 
     if(criteria.equals("reward")) {
       if(!isRecommendModeEnabled) {
@@ -146,6 +146,15 @@ public class MissionService {
   }
 
   /**
+   * Executes the logic of the DELETE request before deleting, 
+   * removing the Mission from the database permanently
+   * @param uuid uuid of the mission to be deleted
+   */
+  public void delete(String name) {
+    this.missionRepository.deleteById(this.getMissionByName(name).get().getUuid());
+  }
+
+  /**
    * Performs the validation of the mission given the specific criteria
    * @param mission the Mission object that is being validated
    * @return whether the given object is a valid Mission or not
@@ -173,7 +182,7 @@ public class MissionService {
     // People that this starship has been piloted by
     var pilots = starship.getBody().getPilots();
     boolean isOnePilotPresent = false;
-    if(!pilots.isEmpty()) {
+    if(pilots != null && !pilots.isEmpty()) {
       for(String pilot: pilots) {
         if(missionDAO.getPeople().contains(pilot)) {
           isOnePilotPresent = true;
@@ -184,8 +193,8 @@ public class MissionService {
       }
     }
     // The number of captains and crew must be bigger than the crew required by the starship
-    int crew = Integer.parseInt(mission.getStarship().getCrew().replace(',', '.'));
-    int pass = Integer.parseInt(mission.getStarship().getPassengers().replace(',', '.'));
+    int crew = Integer.parseInt(mission.getStarship().getCrew().replace(",", ""));
+    int pass = Integer.parseInt(mission.getStarship().getPassengers().replace(",", ""));
     if((mission.getPeople().size() + mission.getCrew()) < crew) {
       return false;
     }

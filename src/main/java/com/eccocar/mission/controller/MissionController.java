@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,6 +81,22 @@ public class MissionController {
   }
 
   /**
+   * Mapping of the DELETE operation endpoint
+   * HTTP Status code: 204 NO CONTENT or 404 NOT FOUND
+   * @param id path variable of the Primary Key of the object to be deleted
+   * @return empty response body
+   */
+  @DeleteMapping("{name}")
+  public ResponseEntity<Void> delete(@PathVariable("name") String name) {
+    if(!missionService.getMissionByName(name).isPresent()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } else {
+      this.missionService.delete(name);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
+  }
+
+  /**
    * Mapping of the GET Mission recommendation endpoint
    * HTTP Status code: 200 OK or 400 BAD REQUEST 
    * @param criteria request parameter of the selected criteria (reward or ratio)
@@ -92,7 +110,7 @@ public class MissionController {
   public ResponseEntity<Mission> getRecommendedMission(@RequestParam(value = "criteria") String criteria) {
     // Verifies that the criteria given in the request parameters of the URL is a valid one
     if(criteria.equals("reward") || criteria.equals("ratio")) {
-      Mission recommendedMission = this.missionService.pollMisionQueue(criteria, isRecommendModeEnabled);
+      Mission recommendedMission = this.missionService.pollMissionQueue(criteria, isRecommendModeEnabled);
       isRecommendModeEnabled = true;
       return ResponseEntity.status(HttpStatus.OK).body(recommendedMission);
     }
