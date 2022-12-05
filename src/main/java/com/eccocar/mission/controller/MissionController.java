@@ -81,9 +81,9 @@ public class MissionController {
   }
 
   /**
-   * Mapping of the DELETE operation endpoint
+   * Mapping of the DELETE Mission endpoint
    * HTTP Status code: 204 NO CONTENT or 404 NOT FOUND
-   * @param id path variable of the Primary Key of the object to be deleted
+   * @param name path variable of the name of the mission to be deleted
    * @return empty response body
    */
   @DeleteMapping("{name}")
