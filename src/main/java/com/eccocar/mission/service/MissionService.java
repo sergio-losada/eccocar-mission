@@ -112,7 +112,7 @@ public class MissionService {
    * @param criteria request parameter of the selected criteria (reward or ratio)
    * @param isRecommendModeEnabled whether the previous operation was a recommendation one
    * or not, in order to keep polling from the queue or requeue the existing missions
-   * @return
+   * @return the first Mission element present in the queue
    */
   public Mission pollMissionQueue(String criteria, boolean isRecommendModeEnabled) {
     // Recommendation criteria: REWARD 
@@ -136,10 +136,10 @@ public class MissionService {
   }
 
   /**
-   * Applies the logic of the GET BY KEY request, invoking the repository
-   * in order to retrieve from the database the specified object
-   * @param id Primary Key of the object to retrieve
-   * @return the entity whose Primary Key matches the given key, or Optional#empty() if none found
+   * Applies the logic of the GET BY NAME request, invoking the repository
+   * in order to retrieve from the database the Mission that matches the given name
+   * @param name the name of the Mission to be retrieved
+   * @return the Mission whose name matches the given name, or Optional#empty() if none found
    */
   public Optional<MissionDAO> getMissionByName(String name) {
     return missionRepository.findByName(name);
@@ -148,7 +148,7 @@ public class MissionService {
   /**
    * Executes the logic of the DELETE request before deleting, 
    * removing the Mission from the database permanently
-   * @param uuid uuid of the mission to be deleted
+   * @param name the name of the mission to be deleted
    */
   public void delete(String name) {
     this.missionRepository.deleteById(this.getMissionByName(name).get().getUuid());
